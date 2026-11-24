@@ -18,11 +18,16 @@ LINE = (
 )
 
 
-def main() -> None:
-    # Gate check first: the sealed scorer wants UTF-8 text of 1 to 160
-    # characters, not only white space. This line is 123 characters.
-    if not 1 <= len(LINE) <= 160 or not LINE.strip():
+def validate_line(line: str) -> None:
+    # The house judge wants UTF-8 text of 1 to 160 characters, not
+    # only white space. Our line is 123 characters, so it passes.
+    if not 1 <= len(line) <= 160 or not line.strip():
         raise SystemExit("line fails the 1-160 character gate")
+
+
+def main() -> None:
+    # Gate check first, before touching the output directory.
+    validate_line(LINE)
     out_dir = Path(os.environ.get("MAKEFUN_OUTPUT_DIR", "/output"))
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "entry.txt").write_text(LINE, encoding="utf-8")
